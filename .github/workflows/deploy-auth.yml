@@ -2,23 +2,20 @@ name: deploy-auth
 
 on:
   push:
-    branches: 
-        - master
+    branches:
+      - master
     paths:
-        - 'auth/**'
+      - "auth/**"
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - run: cd auth && docker build -t ayaz2005/auth .
-    - run: docker login -e $DOCKER_EMAIL -p $DOCKER_PASSWORD
-      env: 
-         DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
-         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD }}
-    - run: docker push ayaz2005/auth
-     
+      - uses: actions/checkout@v2
+      - run: cd auth && docker build -t ayaz2005/auth .
+      - run: docker login -u $DOCKER_EMAIL -p $DOCKER_PASSWORD
+        env:
+          DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD }}
+      - run: docker push ayaz2005/auth
