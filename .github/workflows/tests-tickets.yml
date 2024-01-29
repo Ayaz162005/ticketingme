@@ -2,8 +2,10 @@ name: tests
 
 on:
   pull_request:
+    paths:
+      - "tickets/**"
     branches:
-      - main  # Adjust the branch name as needed
+      - main
 
 jobs:
   build:
