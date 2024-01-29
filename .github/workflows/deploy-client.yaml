@@ -1,0 +1,26 @@
+name: deploy-client
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "client/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd client && docker build -t ayaz2005/client .
+      - run: docker login -u $DOCKER_EMAIL -p $DOCKER_PASSWORD
+        env:
+          DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD }}
+      - run: docker push ayaz2005/client
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save k8s-1-29-0-do-0-tor1-1706555790015
+      - run: kubectl rollout restart deployment client-depl
