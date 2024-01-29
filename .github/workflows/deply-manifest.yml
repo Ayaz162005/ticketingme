@@ -5,7 +5,7 @@ on:
     branches: 
         - master
     paths:
-        - 'auth/**'
+        - 'infra/**'
 
 jobs:
 
@@ -15,15 +15,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: cd auth && docker build -t ayaz2005/auth .
-    - run: docker login -u $DOCKER_EMAIL -p $DOCKER_PASSWORD
-      env: 
-         DOCKER_EMAIL: ${{ secrets.DOCKER_EMAIL }}
-         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD }}
-    - run: docker push ayaz2005/auth
     - uses: digitalocean/action-doctl@v2
       with: 
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     - run: doctl kubernetes cluster kubeconfig save k8s-1-29-0-do-0-tor1-1706555790015
-    - run: kubectl rollout restart deployment auth-depl
+    - run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
      
