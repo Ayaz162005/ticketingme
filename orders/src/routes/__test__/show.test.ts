@@ -26,7 +26,7 @@ it("fetches the order", async () => {
     .post("/api/orders")
     .set("Cookie", user)
     .send({ ticketId: ticket.id })
-    .expect(150);
+    .expect(201);
 
   // make request to fetch the order
   const { body: fetchedOrder } = await request(app)
